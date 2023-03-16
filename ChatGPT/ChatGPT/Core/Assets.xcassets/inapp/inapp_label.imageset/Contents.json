@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "Unlimited chat with gpt for only, Try It Now..png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "Unlimited chat with gpt for only, Try It Now.@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "Unlimited chat with gpt for only, Try It Now.@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
