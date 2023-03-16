@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Hero
 
 final class SecondOnboardingController: UIViewController {
     // MARK: - Properties
@@ -13,6 +14,7 @@ final class SecondOnboardingController: UIViewController {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.image = UIImage(named: "Group 1171274877")
+        iv.hero.id = "image"
         return iv
     }()
     private lazy var nextButton = CustomButton(title: "Next")
@@ -49,6 +51,7 @@ final class SecondOnboardingController: UIViewController {
     private let pageControlImage: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "slider_2")
+        iv.hero.id = "pagecontrol"
         iv.contentMode = .scaleAspectFit
         return iv
     }()
@@ -59,6 +62,7 @@ final class SecondOnboardingController: UIViewController {
     }
     // MARK: - Helpers
     func configure() {
+        self.hero.isEnabled = true
         nextButton.addTarget(self, action: #selector(handleShowChat), for: .touchUpInside)
         navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .black

@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let nav = UINavigationController(rootViewController: FirstOnboardingController())
         window?.rootViewController = nav
         window?.makeKeyAndVisible()
+        nav.hero.isEnabled = true
         
     }
 

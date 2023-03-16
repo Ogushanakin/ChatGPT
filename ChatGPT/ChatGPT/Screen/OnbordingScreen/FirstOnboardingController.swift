@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import Hero
 
 final class FirstOnboardingController: UIViewController {
     // MARK: - Properties
     private let imageView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "Group 1171274876")
+        iv.hero.id = "image"
         return iv
     }()
     private lazy var nextButton = CustomButton(title: "Next")
@@ -41,6 +43,7 @@ final class FirstOnboardingController: UIViewController {
     private let pageControlImage: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "slider_1")
+        iv.hero.id = "pagecontrol"
         iv.contentMode = .scaleAspectFit
         return iv
     }()
@@ -92,6 +95,8 @@ final class FirstOnboardingController: UIViewController {
     // MARK: - Selectors
     @objc func handleNextPage() {
         let controller = SecondOnboardingController()
+        hero.isEnabled = true
+        controller.heroModalAnimationType = .none
         navigationController?.pushViewController(controller, animated: true)
     }
 }
