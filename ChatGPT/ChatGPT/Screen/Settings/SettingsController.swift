@@ -32,8 +32,8 @@ final class SettingsController: UITableViewController {
         tableView.tableHeaderView = SettingsHeader(frame: .init(x: 0, y: 0,
                                                                width: view.frame.width,
                                                                height: 210))
-        self.tableView.layer.cornerRadius = 50
         self.tableView.clipsToBounds = true
+        self.tableView.layer.cornerRadius = 50
     }
     // MARK: - Selectors
     @objc func handleDismiss() {

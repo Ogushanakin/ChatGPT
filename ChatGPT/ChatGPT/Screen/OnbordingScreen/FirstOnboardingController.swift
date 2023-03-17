@@ -12,6 +12,7 @@ final class FirstOnboardingController: UIViewController {
     // MARK: - Properties
     private let imageView: UIImageView = {
         let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
         iv.image = UIImage(named: "Group 1171274876")
         iv.hero.id = "image"
         return iv

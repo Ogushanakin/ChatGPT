@@ -9,8 +9,8 @@ import UIKit
 
 final class MessageCell: UICollectionViewCell {
     // MARK: - Properties
-    var message: String? {
-        didSet { configure() }
+    var message: Chat? {
+        didSet { configure(chat: message!) }
     }
     
     var bubbleLeftAnchor: NSLayoutConstraint!
@@ -19,6 +19,7 @@ final class MessageCell: UICollectionViewCell {
     private let profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
+        iv.image = UIImage(named: "Ellipse 3")
         iv.clipsToBounds = true
         return iv
     }()
@@ -54,22 +55,23 @@ final class MessageCell: UICollectionViewCell {
         profileImageView.layer.cornerRadius = 32 / 2
         
         addSubview(bubbleContainer)
-        bubbleContainer.layer.cornerRadius = self.frame.height / 3
-        bubbleContainer.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMinYCorner]
         bubbleContainer.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.bottom.equalToSuperview().inset(12)
-            make.left.equalTo(profileImageView.snp_rightMargin).offset(12)
+            make.leading.equalTo(profileImageView.snp.trailing).offset(4)
+            make.top.equalToSuperview().offset(6)
+            make.trailing.equalToSuperview().multipliedBy(0.5)
+            make.bottom.equalToSuperview().offset(-12)
         }
-        bubbleContainer.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
         
         bubbleContainer.addSubview(textView)
         textView.snp.makeConstraints { make in
-            make.top.equalTo(bubbleContainer.snp_topMargin).offset(6)
-            make.left.equalTo(bubbleContainer.snp_leftMargin).offset(14)
-            make.right.equalTo(bubbleContainer.snp_rightMargin).inset(14)
-            make.bottom.equalTo(bubbleContainer.snp_bottomMargin).inset(6)
+            make.top.equalTo(bubbleContainer.snp.top)
+            make.left.equalTo(bubbleContainer.snp.left)
+            make.right.equalTo(bubbleContainer.snp.right)
+            make.bottom.equalTo(bubbleContainer.snp.bottom)
         }
+        
+//        bubbleContainer.layer.cornerRadius = self.frame.height / 3
+//        bubbleContainer.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMinYCorner]
     }
     
     required init?(coder: NSCoder) {
@@ -78,10 +80,21 @@ final class MessageCell: UICollectionViewCell {
     
     // MARK: - Helpers
     
-    func configure() {
-        textView.text = message
-        profileImageView.image = UIImage(named: "Ellipse 3")
+    func configure(chat: Chat) {
+        bubbleContainer.backgroundColor = chat.isSender ? #colorLiteral(red: 0.2923462689, green: 0.6272404194, blue: 0.5064268708, alpha: 1) : .gray
+        profileImageView.isHidden = chat.isSender
+        
+        self.textView.text = chat.message
+        if chat.isSender {
+            bubbleContainer.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner, .layerMinXMinYCorner]
+            bubbleContainer.snp.remakeConstraints { make in
+                make.leading.equalTo(self.snp.centerX)
+                make.top.equalToSuperview().offset(6)
+                make.trailing.equalToSuperview().offset(-5)
+                make.bottom.equalToSuperview().offset(-12)
+            }
+            layoutIfNeeded()
+        }
     }
-    
 }
 

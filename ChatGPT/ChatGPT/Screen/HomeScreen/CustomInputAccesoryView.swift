@@ -7,13 +7,20 @@
 
 import UIKit
 
+protocol ChatInputDelegate: AnyObject {
+    func inputView(_ view: CustomInputAccessoryView, input: String)
+}
+
 final class CustomInputAccessoryView: UIView {    
     // MARK: - Properties
-    static var messageInputTextView: UITextView = {
+    weak var delegate: ChatInputDelegate?
+    var sendAction: (() -> Void)? = nil
+    var messageInputTextView: UITextView = {
         let tv = UITextView()
         tv.font = UIFont.systemFont(ofSize: 16)
         tv.layer.cornerRadius = 8
         tv.isScrollEnabled = false
+        tv.autocorrectionType = .no
         return tv
     }()
     private lazy var sendButton: UIButton = {
@@ -61,8 +68,8 @@ final class CustomInputAccessoryView: UIView {
             make.width.equalTo(50)
         }
         
-        addSubview(CustomInputAccessoryView.messageInputTextView)
-        CustomInputAccessoryView.messageInputTextView.snp.makeConstraints { make in
+        addSubview(messageInputTextView)
+        messageInputTextView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
             make.left.equalToSuperview().offset(6)
             make.right.equalTo(sendButton.snp_leftMargin).inset(10)
@@ -71,8 +78,8 @@ final class CustomInputAccessoryView: UIView {
         
         addSubview(placeholderLabel)
         placeholderLabel.snp.makeConstraints { make in
-            make.left.equalTo(CustomInputAccessoryView.messageInputTextView.snp_leftMargin).offset(18)
-            make.centerY.equalTo(CustomInputAccessoryView.messageInputTextView)
+            make.left.equalTo(messageInputTextView.snp_leftMargin).offset(18)
+            make.centerY.equalTo(messageInputTextView)
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleTextInputChange),
@@ -86,14 +93,16 @@ final class CustomInputAccessoryView: UIView {
     }
     // MARK: - Selectors
     @objc func handleTextInputChange() {
-        placeholderLabel.isHidden = !CustomInputAccessoryView.messageInputTextView.text.isEmpty
+        placeholderLabel.isHidden = !messageInputTextView.text.isEmpty
     }
     @objc func handleSendMessage() {
-        guard CustomInputAccessoryView.messageInputTextView.text != nil else { return }
+        sendAction?()
+        guard let input = messageInputTextView.text else { return }
+        delegate?.inputView(self, input: input)
     }
     // MARK: - Helpers
     func clearMessageText() {
-        CustomInputAccessoryView.messageInputTextView.text = nil
+        messageInputTextView.text = nil
         placeholderLabel.isHidden = false
     }
 }

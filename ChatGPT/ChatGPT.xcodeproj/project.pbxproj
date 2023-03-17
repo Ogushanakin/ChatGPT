@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7111479529C3BE8400440E53 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7111479429C3BE8400440E53 /* User.swift */; };
+		7111479729C3BE9700440E53 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7111479629C3BE9700440E53 /* ViewModel.swift */; };
+		7111479A29C3C33000440E53 /* UnlockScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7111479929C3C33000440E53 /* UnlockScreenController.swift */; };
 		712B6ABA29C31BD000E90014 /* OpenAISwift in Frameworks */ = {isa = PBXBuildFile; productRef = 712B6AB929C31BD000E90014 /* OpenAISwift */; };
 		712B6ABC29C31C0600E90014 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712B6ABB29C31C0600E90014 /* APICaller.swift */; };
 		71341C0429C1A58D00C3FC14 /* InAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71341C0329C1A58D00C3FC14 /* InAppController.swift */; };
@@ -32,6 +35,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7111479429C3BE8400440E53 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		7111479629C3BE9700440E53 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		7111479929C3C33000440E53 /* UnlockScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockScreenController.swift; sourceTree = "<group>"; };
 		712B6ABB29C31C0600E90014 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
 		71341C0329C1A58D00C3FC14 /* InAppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppController.swift; sourceTree = "<group>"; };
 		71EFF17729C053BD007AE832 /* ChatGPT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatGPT.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,6 +78,7 @@
 		7111479129C3AB8C00440E53 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				7111479429C3BE8400440E53 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -82,6 +89,22 @@
 				712B6ABB29C31C0600E90014 /* APICaller.swift */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		7111479329C3BE7600440E53 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				7111479629C3BE9700440E53 /* ViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		7111479829C3C32000440E53 /* UnlockScreen */ = {
+			isa = PBXGroup;
+			children = (
+				7111479929C3C33000440E53 /* UnlockScreenController.swift */,
+			);
+			path = UnlockScreen;
 			sourceTree = "<group>";
 		};
 		71341C0529C1A59100C3FC14 /* InAppScreen */ = {
@@ -121,6 +144,7 @@
 		71EFF19129C053C4007AE832 /* Screen */ = {
 			isa = PBXGroup;
 			children = (
+				7111479829C3C32000440E53 /* UnlockScreen */,
 				71EFF19529C05606007AE832 /* OnbordingScreen */,
 				71EFF1A029C08B73007AE832 /* HomeScreen */,
 				71341C0529C1A59100C3FC14 /* InAppScreen */,
@@ -132,8 +156,9 @@
 		71EFF19229C053C6007AE832 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				7111479229C3AB9400440E53 /* Service */,
 				7111479129C3AB8C00440E53 /* Model */,
+				7111479329C3BE7600440E53 /* ViewModel */,
+				7111479229C3AB9400440E53 /* Service */,
 				71EFF1B229C0CD61007AE832 /* Extensions */,
 				71EFF19B29C05EE8007AE832 /* CustomComponent */,
 				71EFF19329C05435007AE832 /* Delegates */,
@@ -296,14 +321,17 @@
 				71EFF19D29C05EFB007AE832 /* CustomButton.swift in Sources */,
 				71EFF1AF29C0B737007AE832 /* SettingsCell.swift in Sources */,
 				712B6ABC29C31C0600E90014 /* APICaller.swift in Sources */,
+				7111479529C3BE8400440E53 /* User.swift in Sources */,
 				71EFF17B29C053BD007AE832 /* AppDelegate.swift in Sources */,
 				71EFF1AB29C0B6CC007AE832 /* SettingsController.swift in Sources */,
+				7111479729C3BE9700440E53 /* ViewModel.swift in Sources */,
 				71EFF17D29C053BD007AE832 /* SceneDelegate.swift in Sources */,
 				71EFF1B429C0CD79007AE832 /* NavBarExtension.swift in Sources */,
 				71EFF18529C053BD007AE832 /* ChatGPT.xcdatamodeld in Sources */,
 				71EFF1A429C08F14007AE832 /* CustomInputAccesoryView.swift in Sources */,
 				71341C0429C1A58D00C3FC14 /* InAppController.swift in Sources */,
 				71EFF1A629C09411007AE832 /* MessageCell.swift in Sources */,
+				7111479A29C3C33000440E53 /* UnlockScreenController.swift in Sources */,
 				71EFF1AD29C0B71C007AE832 /* SettingsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

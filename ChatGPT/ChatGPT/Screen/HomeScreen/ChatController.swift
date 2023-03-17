@@ -12,8 +12,7 @@ private let reuseIdentifier = "MessageCell"
 final class ChatController: UICollectionViewController {
     
     // MARK: - Properties
-    
-    private var models = [String]()
+    let viewModel = ChatViewModel()
     
     var formCurrentUser = false
     
@@ -33,23 +32,8 @@ final class ChatController: UICollectionViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        CustomInputAccessoryView.messageInputTextView.delegate = self
+        customInputView.delegate = self
         configureUI()
-        if let text = CustomInputAccessoryView.messageInputTextView.text, !text.isEmpty {
-            models.append(text)
-            APICaller.shared.getResponse(input: text) { [weak self] result in
-                switch result {
-                case .success(let output):
-                    self?.models.append(output)
-                    DispatchQueue.main.async {
-                        self?.collectionView.reloadData()
-                    }
-                case .failure:
-                    print("Failed")
-                }
-            }
-        }
-
     }
     override var inputAccessoryView: UIView? {
         get { return customInputView }
@@ -61,6 +45,7 @@ final class ChatController: UICollectionViewController {
     
     // MARK: - Helpers
     func configureUI() {
+        viewModel.delegate = self
         let controller = InAppController()
         let nav = UINavigationController(rootViewController: controller)
         nav.modalPresentationStyle = .fullScreen
@@ -88,12 +73,12 @@ final class ChatController: UICollectionViewController {
 
 extension ChatController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return models.count
+        return viewModel.numberofRows()
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! MessageCell
-        cell.message = models[indexPath.row]
+        cell.message = viewModel.chatForRow(at: indexPath.row)
         return cell
     }
 }
@@ -104,9 +89,8 @@ extension ChatController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
-        let estimatedSizeCell = MessageCell(frame: frame)
-        estimatedSizeCell.message = models[indexPath.row]
+        let estimatedSizeCell = MessageCell(frame: .init(x: 0, y: 0, width: view.frame.width, height: 50))
+        estimatedSizeCell.message = viewModel.chatForRow(at: indexPath.row)
         estimatedSizeCell.layoutIfNeeded()
         
         let targetSize = CGSize(width: view.frame.width, height: 1000)
@@ -123,5 +107,28 @@ extension ChatController: UITextViewDelegate {
             return false
         }
         return true
+    }
+}
+
+extension ChatController: ViewModelDelegate {
+    func responseSuccess() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+    }
+}
+
+extension ChatController: ChatInputDelegate {
+    func inputView(_ view: CustomInputAccessoryView, input: String) {
+        self.customInputView.sendAction = { [self] in
+            self.viewModel.getResponse(input: input) { result in
+                switch result {
+                case .success(let success):
+                    print(success)
+                case .failure(let failure):
+                    print(failure)
+                }
+            }
+        }
     }
 }
