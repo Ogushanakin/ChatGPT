@@ -60,10 +60,13 @@ final class ChatController: UICollectionViewController {
         navigationItem.titleView = UIImageView(image: UIImage(named: "ChatGPT"))
         self.navigationController?.addCustomBottomLine(color: #colorLiteral(red: 0.07923045009, green: 0.249772191, blue: 0.2033925056, alpha: 1) ,height: 0.6)
         navigationController?.isNavigationBarHidden = false
+        viewModel.fetchChat()
     }
     // MARK: - Selectors
     @objc func handleRefresh() {
-        print("handleRefresh")
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
     @objc func handleSettings() {
         let controller = SettingsController()
