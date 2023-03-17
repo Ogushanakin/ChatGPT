@@ -94,6 +94,7 @@
 		7111479329C3BE7600440E53 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				7147F22629C4527700CC860A /* ChatGPT.xcdatamodeld */,
 				7111479629C3BE9700440E53 /* ViewModel.swift */,
 			);
 			path = ViewModels;
@@ -155,7 +156,6 @@
 		71EFF19229C053C6007AE832 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				7147F22629C4527700CC860A /* ChatGPT.xcdatamodeld */,
 				7111479129C3AB8C00440E53 /* Model */,
 				7111479329C3BE7600440E53 /* ViewModels */,
 				7111479229C3AB9400440E53 /* Service */,

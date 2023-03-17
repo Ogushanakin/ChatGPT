@@ -34,6 +34,8 @@ final class ChatController: UICollectionViewController {
         super.viewDidLoad()
         customInputView.delegate = self
         configureUI()
+        collectionView.delegate = self
+        collectionView.dataSource = self
     }
     override var inputAccessoryView: UIView? {
         get { return customInputView }
@@ -41,8 +43,6 @@ final class ChatController: UICollectionViewController {
     override var canBecomeFirstResponder: Bool {
         return true
     }
-    // MARK: - API
-    
     // MARK: - Helpers
     func configureUI() {
         viewModel.delegate = self
@@ -52,6 +52,7 @@ final class ChatController: UICollectionViewController {
         self.present(nav, animated: true, completion: nil)
         
         collectionView.backgroundColor = .black
+        collectionView.scrollsToTop = true
         collectionView.register(MessageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.alwaysBounceVertical = true
         collectionView.keyboardDismissMode = .interactive

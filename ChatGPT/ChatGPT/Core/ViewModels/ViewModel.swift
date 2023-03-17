@@ -23,6 +23,15 @@ protocol ViewModelProtocol {
 
 class ChatViewModel: ViewModelProtocol {
     
+    var delegate: ViewModelDelegate?
+    
+    private var client = OpenAISwift(authToken: "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")
+    
+    var messages = [Chat]() {
+        didSet {
+            self.delegate?.responseSuccess()
+        }
+    }
     // MARK: - CoreData Save
     func saveChat(chate: Chat) {
         let delegate = UIApplication.shared.delegate as! AppDelegate
@@ -45,13 +54,6 @@ class ChatViewModel: ViewModelProtocol {
         }
     }
     
-    var delegate: ViewModelDelegate?
-    private var client = OpenAISwift(authToken: "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")
-    var messages = [Chat]() {
-        didSet {
-            self.delegate?.responseSuccess()
-        }
-    }
     // MARK: - CoreData Fetch
     func fetchChat() {
             let delegate = UIApplication.shared.delegate as! AppDelegate
