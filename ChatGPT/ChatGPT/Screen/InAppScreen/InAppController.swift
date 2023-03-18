@@ -57,7 +57,7 @@ final class InAppController: UIViewController {
         super.viewDidLoad()
         configure()
     }
-    // MARK: - Properties
+    // MARK: - Helpers
     func configure() {
         view.backgroundColor = .black
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_close")?.withRenderingMode(.alwaysOriginal), style: .done, target: self, action: #selector(closePage))
@@ -103,6 +103,7 @@ final class InAppController: UIViewController {
             make.bottom.equalTo(tryButton.snp_topMargin).inset(-30)
         }
     }
+    // MARK: - Selectors
     @objc func myButtonTapped(){
       if weeklyImageButton.isSelected == true {
         weeklyImageButton.isSelected = false

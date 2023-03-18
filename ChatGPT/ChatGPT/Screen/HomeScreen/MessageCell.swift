@@ -12,10 +12,6 @@ final class MessageCell: UICollectionViewCell {
     var message: Chat? {
         didSet { configure(chat: message!) }
     }
-    
-    var bubbleLeftAnchor: NSLayoutConstraint!
-    var bubbleRightAnchor: NSLayoutConstraint!
-    
     private let profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
@@ -47,14 +43,13 @@ final class MessageCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(profileImageView)
+        profileImageView.layer.cornerRadius = 32 / 2
         profileImageView.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(10)
             make.bottom.equalToSuperview().offset(4)
             make.height.equalTo(32)
             make.width.equalTo(32)
         }
-        profileImageView.layer.cornerRadius = 32 / 2
-        
         addSubview(bubbleContainer)
         bubbleContainer.snp.makeConstraints { make in
             make.leading.equalTo(profileImageView.snp.trailing).offset(4)
@@ -62,7 +57,6 @@ final class MessageCell: UICollectionViewCell {
             make.trailing.equalToSuperview().multipliedBy(0.5)
             make.bottom.equalToSuperview().offset(-12)
         }
-        
         bubbleContainer.addSubview(textView)
         textView.snp.makeConstraints { make in
             make.top.equalTo(bubbleContainer.snp.top).offset(8)
@@ -72,18 +66,6 @@ final class MessageCell: UICollectionViewCell {
         }
         bubbleContainer.layer.cornerRadius =  24
         bubbleContainer.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMinYCorner]
-        
-        
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    @objc func handleClipboard(_ sender: UIButton) {
-        print("asdkjalsşdkalskdasdasd")
-    }
-    // MARK: - Helpers
-    func configure(chat: Chat) {
-        
         contentView.addSubview(clipboardButton)
         addSubview(clipboardButton)
         clipboardButton.snp.makeConstraints { make in
@@ -92,10 +74,15 @@ final class MessageCell: UICollectionViewCell {
             make.height.equalTo(32)
             make.width.equalTo(32)
         }
-        bubbleContainer.backgroundColor = chat.isSender ? #colorLiteral(red: 0.2923462689, green: 0.6272404194, blue: 0.5064268708, alpha: 1) : .gray
-        profileImageView.isHidden = chat.isSender
-        
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    // MARK: - ConfigureChatBubbleContainer
+    func configure(chat: Chat) {
         self.textView.text = chat.message
+        bubbleContainer.backgroundColor = chat.isSender ? #colorLiteral(red: 0.2923462689, green: 0.6272404194, blue: 0.5064268708, alpha: 1) : #colorLiteral(red: 0.1490196078, green: 0.1490196078, blue: 0.1490196078, alpha: 1)
+        profileImageView.isHidden = chat.isSender
         if chat.isSender {
             bubbleContainer.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner, .layerMinXMinYCorner]
             bubbleContainer.snp.remakeConstraints { make in
@@ -115,6 +102,10 @@ final class MessageCell: UICollectionViewCell {
             }
             layoutIfNeeded()
         }
+    }
+    // MARK: - Selectors
+    @objc func handleClipboard(_ sender: UIButton) {
+        print("asdkjalsşdkalskdasdasd")
     }
 }
 

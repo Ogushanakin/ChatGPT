@@ -10,8 +10,6 @@ import UIKit
 private let reuseIdentifier = "ProfileCell"
 
 final class SettingsController: UITableViewController {
-    // MARK: - Properties
-    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,15 +60,15 @@ extension SettingsController {
         
         switch viewModel {
         case .rateus:
-            print("DEBUG: Show cart page...")
+            print("DEBUG: Rate Us...")
         case .contact:
-            print("DEBUG: Show profile page...")
+            print("DEBUG: Contact...")
         case .policy:
-            print("DEBUG: Show bildirimler...")
+            print("DEBUG: Policy...")
         case .terms:
-            print("DEBUG: Show iadeler...")
+            print("DEBUG: Terms...")
         case .purchase:
-            print("DEBUG: Show settings page...")
+            print("DEBUG: Purchase...")
         }
     }
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

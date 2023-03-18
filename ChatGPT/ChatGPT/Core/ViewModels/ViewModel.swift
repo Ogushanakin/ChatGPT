@@ -25,7 +25,7 @@ class ChatViewModel: ViewModelProtocol {
     
     var delegate: ViewModelDelegate?
     
-    private var client = OpenAISwift(authToken: "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")
+    private var client = OpenAISwift(authToken: Constants.key)
     
     var messages = [Chat]() {
         didSet {
@@ -53,34 +53,33 @@ class ChatViewModel: ViewModelProtocol {
             print("\(error.localizedDescription)")
         }
     }
-    
     // MARK: - CoreData Fetch
     func fetchChat() {
-            let delegate = UIApplication.shared.delegate as! AppDelegate
-            let context = delegate.persistentContainer.viewContext
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ChatEntity")
-            fetchRequest.returnsObjectsAsFaults = false
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let context = delegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ChatEntity")
+        fetchRequest.returnsObjectsAsFaults = false
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            var chat : Chat!
+            var dict : [String : Any]!
             
-            do {
-                let results = try context.fetch(fetchRequest)
-                var chat : Chat!
-                var dict : [String : Any]!
-                
-                
-                for result in results as! [NSManagedObject] {
-                    let message = result.value(forKey: "message") as? String ?? ""
-                    let isSender =  result.value(forKey: "isSender") as? Bool ?? false
             
-                    dict = ["message":message,"date": Date().timeIntervalSince1970,"isSender":isSender]
-                    chat = Chat(data: dict)
-                    self.messages.append(chat)
-                }
+            for result in results as! [NSManagedObject] {
+                let message = result.value(forKey: "message") as? String ?? ""
+                let isSender =  result.value(forKey: "isSender") as? Bool ?? false
                 
-            } catch  {
-                print(error.localizedDescription)
+                dict = ["message":message,"date": Date().timeIntervalSince1970,"isSender":isSender]
+                chat = Chat(data: dict)
+                self.messages.append(chat)
             }
+            
+        } catch  {
+            print(error.localizedDescription)
         }
-    
+    }
+    // MARK: - Response
     func getResponse(input: String, completion: @escaping(Result<String, Error>) -> Void) {
         let sender = Chat(data: ["isSender": true, "date": Date().timeIntervalSince1970 as Double, "message": input])
         self.saveChat(chate: sender)
@@ -100,11 +99,10 @@ class ChatViewModel: ViewModelProtocol {
             }
         })
     }
-    
+    // MARK: - For CollectionView
     func numberofRows() -> Int {
         return messages.count
     }
-    
     func chatForRow(at indexPath: Int) -> Chat {
         messages[indexPath]
     }

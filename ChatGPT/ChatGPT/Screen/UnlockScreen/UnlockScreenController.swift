@@ -40,7 +40,7 @@ final class UnlockScreenController: UIViewController {
         super.viewDidLoad()
         configure()
     }
-    // MARK: - Properties
+    // MARK: - Helpers
     func configure() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_close")?.withRenderingMode(.alwaysOriginal), style: .done, target: self, action: #selector(closePage))
         navigationController?.isNavigationBarHidden = false
@@ -85,6 +85,7 @@ final class UnlockScreenController: UIViewController {
             make.bottom.equalTo(tryButton.snp_topMargin).inset(-30)
         }
     }
+    // MARK: - Selectors
     @objc func myButtonTapped(){
         
     }

@@ -10,7 +10,6 @@ import UIKit
 protocol ChatInputDelegate: AnyObject {
     func inputView(_ view: CustomInputAccessoryView, input: String)
 }
-
 final class CustomInputAccessoryView: UIView {    
     // MARK: - Properties
     weak var delegate: ChatInputDelegate?
