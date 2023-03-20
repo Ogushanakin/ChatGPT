@@ -24,6 +24,16 @@ final class ChatController: UICollectionViewController {
         configureUI()
         configureNavBar()
         viewModel.fetchChat()
+        customInputView.sendAction = { [self] input in
+            viewModel.getResponse(input: input!) { result in
+                switch result {
+                case .success(let success):
+                    print(success)
+                case .failure(let failure):
+                    print(failure)
+                }
+            }
+        }
     }
     init() {
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
@@ -42,7 +52,7 @@ final class ChatController: UICollectionViewController {
         viewModel.delegate = self
         collectionView.delegate = self
         collectionView.dataSource = self
-        customInputView.delegate = self
+//        customInputView.delegate = self
         
         collectionView.backgroundColor = .black
         collectionView.scrollsToTop = true
@@ -88,7 +98,6 @@ extension ChatController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return .init(top: 16, left: 0, bottom: 16, right: 0)
     }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let estimatedSizeCell = MessageCell(frame: .init(x: 0, y: 0, width: view.frame.width, height: 50))
         estimatedSizeCell.message = viewModel.chatForRow(at: indexPath.row)
@@ -115,21 +124,23 @@ extension ChatController: ViewModelDelegate {
     func responseSuccess() {
         DispatchQueue.main.async {
             self.collectionView.reloadData()
+            let indexPath = IndexPath(row: self.viewModel.messages.count - 1, section: 0)
+            self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
         }
     }
 }
-    // MARK: - ChatInputDelegate
-extension ChatController: ChatInputDelegate {
-    func inputView(_ view: CustomInputAccessoryView, input: String) {
-        self.customInputView.sendAction = { [self] in
-            self.viewModel.getResponse(input: input) { result in
-                switch result {
-                case .success(let success):
-                    print(success)
-                case .failure(let failure):
-                    print(failure)
-                }
-            }
-        }
-    }
-}
+//    // MARK: - ChatInputDelegate
+//extension ChatController: ChatInputDelegate {
+//    func inputView(_ view: CustomInputAccessoryView, input: String) {
+//        self.customInputView.sendAction = { [self] in
+//            self.viewModel.getResponse(input: input) { result in
+//                switch result {
+//                case .success(let success):
+//                    print(success)
+//                case .failure(let failure):
+//                    print(failure)
+//                }
+//            }
+//        }
+//    }
+//}

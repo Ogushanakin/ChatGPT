@@ -27,7 +27,7 @@ class ChatViewModel: ViewModelProtocol {
     
     private var client = OpenAISwift(authToken: Constants.key)
     
-    var messages = [Chat]() {
+    var messages = [Chat(data: ["isSender": false, "date": Date().timeIntervalSince1970 as Double, "message": "Hello my name is ChatGPT. How can I help you?"])] {
         didSet {
             self.delegate?.responseSuccess()
         }
@@ -84,7 +84,7 @@ class ChatViewModel: ViewModelProtocol {
         let sender = Chat(data: ["isSender": true, "date": Date().timeIntervalSince1970 as Double, "message": input])
         self.saveChat(chate: sender)
         self.messages.append(sender)
-        client.sendCompletion(with: input, maxTokens: 100, temperature: 1, completionHandler: { result in
+        client.sendCompletion(with: input, maxTokens: 500, temperature: 1, completionHandler: { result in
             switch result {
             case .success(let model):
                 print(String(describing: model.choices))

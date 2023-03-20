@@ -17,6 +17,13 @@ final class FirstOnboardingController: UIViewController {
         iv.hero.id = "image"
         return iv
     }()
+    private let pageControlImage: UIImageView = {
+        let iv = UIImageView()
+        iv.image = UIImage(named: "slider_1")
+        iv.hero.id = "pagecontrol"
+        iv.contentMode = .scaleAspectFit
+        return iv
+    }()
     private lazy var nextButton = CustomButton(title: "Next")
     private let loremLabel: UILabel = {
         let label = UILabel()
@@ -40,13 +47,6 @@ final class FirstOnboardingController: UIViewController {
         label.numberOfLines = 2
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
-    }()
-    private let pageControlImage: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(named: "slider_1")
-        iv.hero.id = "pagecontrol"
-        iv.contentMode = .scaleAspectFit
-        return iv
     }()
     // MARK: - Lifecycle
     override func viewDidLoad() {

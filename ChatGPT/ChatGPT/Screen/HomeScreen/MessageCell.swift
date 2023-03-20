@@ -39,6 +39,7 @@ final class MessageCell: UICollectionViewCell {
         button.addTarget(target, action: #selector(MessageCell.handleClipboard(_:)), for: .touchUpInside)
         return button
     }()
+    private lazy var unlockImageButton = ImageButton(normal: "unlock_chat", selected: "unlock_chat")
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -61,19 +62,11 @@ final class MessageCell: UICollectionViewCell {
         textView.snp.makeConstraints { make in
             make.top.equalTo(bubbleContainer.snp.top).offset(8)
             make.left.equalTo(bubbleContainer.snp.left).offset(8)
-            make.right.equalTo(bubbleContainer.snp.right).inset(18)
+            make.right.equalTo(bubbleContainer.snp.right).inset(24)
             make.bottom.equalTo(bubbleContainer.snp.bottom).inset(8)
         }
         bubbleContainer.layer.cornerRadius =  24
         bubbleContainer.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMinYCorner]
-        contentView.addSubview(clipboardButton)
-        addSubview(clipboardButton)
-        clipboardButton.snp.makeConstraints { make in
-            make.top.equalTo(bubbleContainer.snp_topMargin).offset(4)
-            make.right.equalTo(bubbleContainer.snp_rightMargin).inset(2)
-            make.height.equalTo(32)
-            make.width.equalTo(32)
-        }
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -93,6 +86,14 @@ final class MessageCell: UICollectionViewCell {
             }
             layoutIfNeeded()
         } else {
+            contentView.addSubview(clipboardButton)
+            addSubview(clipboardButton)
+            clipboardButton.snp.makeConstraints { make in
+                make.top.equalTo(bubbleContainer.snp_topMargin)
+                make.right.equalTo(bubbleContainer.snp_rightMargin).offset(6)
+                make.height.equalTo(40)
+                make.width.equalTo(40)
+            }
             bubbleContainer.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMinYCorner]
             bubbleContainer.snp.remakeConstraints { make in
                 make.leading.equalTo(profileImageView.snp.trailing).offset(4)

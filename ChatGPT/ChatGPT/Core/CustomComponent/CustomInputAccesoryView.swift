@@ -7,13 +7,14 @@
 
 import UIKit
 
-protocol ChatInputDelegate: AnyObject {
-    func inputView(_ view: CustomInputAccessoryView, input: String)
-}
+//protocol ChatInputDelegate: AnyObject {
+//    func inputView(_ view: CustomInputAccessoryView, input: String)
+//}
 final class CustomInputAccessoryView: UIView {    
     // MARK: - Properties
-    weak var delegate: ChatInputDelegate?
-    var sendAction: (() -> Void)? = nil
+    
+    var sendAction: ((String?) -> Void)?
+    
     var messageInputTextView: UITextView = {
         let tv = UITextView()
         tv.font = UIFont.systemFont(ofSize: 16)
@@ -95,9 +96,8 @@ final class CustomInputAccessoryView: UIView {
         placeholderLabel.isHidden = !messageInputTextView.text.isEmpty
     }
     @objc func handleSendMessage() {
-        sendAction?()
         guard let input = messageInputTextView.text else { return }
-        delegate?.inputView(self, input: input)
+        sendAction?(input)
     }
     // MARK: - Helpers
     func clearMessageText() {

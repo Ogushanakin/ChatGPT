@@ -10,48 +10,17 @@ import UIKit
 final class InAppController: UIViewController {
     // MARK: - Properties
     private lazy var tryButton = CustomButton(title: "Try It Now")
-    private lazy var weeklyImageButton: UIButton = {
-        let button = UIButton()
-        button.imageView?.contentMode = .scaleAspectFit
-        button.setImage(UIImage(named : "weekly")?.withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
-        button.setImage(UIImage(named : "weekly_selected")?.withRenderingMode(.alwaysOriginal), for: UIControl.State.selected)
-        button.addTarget(self, action: #selector(myButtonTapped), for: UIControl.Event.touchUpInside)
-        return button
-    }()
-    private lazy var monthlyImageButton: UIButton = {
-        let button = UIButton()
-        button.imageView?.contentMode = .scaleAspectFit
-        button.setImage(UIImage(named : "monthly")?.withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
-        button.setImage(UIImage(named : "monthly_selected")?.withRenderingMode(.alwaysOriginal), for: UIControl.State.selected)
-        button.addTarget(self, action: #selector(monthlyButtonTapped), for: UIControl.Event.touchUpInside)
-        return button
-    }()
-    private lazy var annualyImageButton: UIButton = {
-        let button = UIButton()
-        button.imageView?.contentMode = .scaleAspectFit
-        button.setImage(UIImage(named : "annualy")?.withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
-        button.setImage(UIImage(named : "annualy_selected")?.withRenderingMode(.alwaysOriginal), for: UIControl.State.selected)
-        button.addTarget(self, action: #selector(annualyButtonTapped), for: UIControl.Event.touchUpInside)
-        return button
-    }()
-    private let logoImage: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(named: "ChatGPT")
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
-    private let labelImage: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(named: "inapp_label")
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
-    private let unlockImage: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(named: "unlock_label")
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
+    private lazy var weeklyImageButton = ImageButton(normal: "weekly", selected: "weekly_selected")
+    private lazy var monthlyImageButton = ImageButton(normal: "monthly", selected: "monthly_selected")
+    private lazy var annualyImageButton = ImageButton(normal: "annualy", selected: "annualy_selected")
+    private let logoImage = CustomImageView(imageNamed: "ChatGPT")
+    private let labelImage = CustomImageView(imageNamed: "inapp_label")
+    private let unlockImage = CustomImageView(imageNamed: "unlock_label")
+    private lazy var policyButton = UnderlineTextButton(title: "Privacy Policy")
+    private lazy var purchaseButton = UnderlineTextButton(title: "Restore Purchase")
+    private lazy var termsButton = UnderlineTextButton(title: "Terms of Use")
+    private let lineImage = CustomImageView(imageNamed: "text_line")
+    private let lineeImage = CustomImageView(imageNamed: "text_line")
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,12 +28,15 @@ final class InAppController: UIViewController {
     }
     // MARK: - Helpers
     func configure() {
+        weeklyImageButton.addTarget(self, action: #selector(myButtonTapped), for: UIControl.Event.touchUpInside)
+        monthlyImageButton.addTarget(self, action: #selector(monthlyButtonTapped), for: UIControl.Event.touchUpInside)
+        annualyImageButton.addTarget(self, action: #selector(annualyButtonTapped), for: UIControl.Event.touchUpInside)
         view.backgroundColor = .black
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_close")?.withRenderingMode(.alwaysOriginal), style: .done, target: self, action: #selector(closePage))
         navigationController?.isNavigationBarHidden = false
         view.addSubview(tryButton)
         tryButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(34)
             make.left.equalToSuperview().offset(40)
             make.right.equalToSuperview().inset(40)
             make.height.equalTo(tryButton.snp.width).multipliedBy(0.18)
@@ -101,6 +73,15 @@ final class InAppController: UIViewController {
             make.left.equalToSuperview().offset(20)
             make.right.equalToSuperview().inset(20)
             make.bottom.equalTo(tryButton.snp_topMargin).inset(-30)
+        }
+        let buttonsStack = UIStackView(arrangedSubviews: [policyButton, lineImage, purchaseButton, lineeImage, termsButton])
+        buttonsStack.axis = .horizontal
+        buttonsStack.distribution = .equalCentering
+        view.addSubview(buttonsStack)
+        buttonsStack.snp.makeConstraints { make in
+            make.top.equalTo(tryButton.snp_bottomMargin).offset(12)
+            make.left.equalToSuperview().offset(30)
+            make.right.equalToSuperview().inset(30)
         }
     }
     // MARK: - Selectors
