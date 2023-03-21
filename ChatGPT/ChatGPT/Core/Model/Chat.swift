@@ -15,6 +15,6 @@ struct Chat {
     init(data: [String : Any]) {
         self.isSender = data["isSender"] as? Bool ?? false
         self.message = data["message"] as? String ?? ""
-        self.date = data["date"] as? Date ?? Date.now
+        self.date = data["date"] as? Date ?? Date()
     }
 }
