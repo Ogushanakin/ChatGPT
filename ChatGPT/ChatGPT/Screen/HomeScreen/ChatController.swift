@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RevenueCat
 
 private let reuseIdentifier = "MessageCell"
 
@@ -24,16 +25,6 @@ final class ChatController: UICollectionViewController {
         configureUI()
         configureNavBar()
         viewModel.fetchChat()
-        customInputView.sendAction = { [self] input in
-            viewModel.getResponse(input: input!) { result in
-                switch result {
-                case .success(let success):
-                    print(success)
-                case .failure(let failure):
-                    print(failure)
-                }
-            }
-        }
     }
     init() {
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
@@ -49,31 +40,55 @@ final class ChatController: UICollectionViewController {
     }
     // MARK: - Helpers
     func configureUI() {
+        premiumControl()
         viewModel.delegate = self
         collectionView.delegate = self
         collectionView.dataSource = self
-//        customInputView.delegate = self
         
         collectionView.backgroundColor = .black
         collectionView.scrollsToTop = true
         collectionView.register(MessageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.alwaysBounceVertical = true
         collectionView.keyboardDismissMode = .interactive
+        customInputView.sendAction = { [self] input in
+            viewModel.getResponse(input: input!) { result in
+                switch result {
+                case .success(let success):
+                    print(success)
+                case .failure(let failure):
+                    print(failure)
+                }
+            }
+        }
     }
     func configureNavBar() {
-        let controller = InAppController()
-        let nav = UINavigationController(rootViewController: controller)
-        nav.modalPresentationStyle = .fullScreen
-        self.present(nav, animated: true, completion: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon _refresh")?.withRenderingMode(.alwaysOriginal), style: .done, target: self, action: #selector(handleRefresh))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "icon_settings")?.withRenderingMode(.alwaysOriginal), style: .done, target: self, action: #selector(handleSettings))
         navigationItem.titleView = UIImageView(image: UIImage(named: "ChatGPT"))
         self.navigationController?.addCustomBottomLine(color: #colorLiteral(red: 0.07923045009, green: 0.249772191, blue: 0.2033925056, alpha: 1) ,height: 0.6)
         navigationController?.isNavigationBarHidden = false
     }
+    func premiumControl() {
+        Purchases.shared.getCustomerInfo { [self] info, error in
+            guard let info = info, error == nil else { return }
+            if info.entitlements.all["Premium"]?.isActive == true {
+                DispatchQueue.main.async {
+                    print("İs Premium***********************************")
+                }
+            } else {
+                DispatchQueue.main.async {
+                    let controller = InAppController()
+                    let nav = UINavigationController(rootViewController: controller)
+                    nav.modalPresentationStyle = .fullScreen
+                    self.present(nav, animated: true, completion: nil)
+                }
+            }
+        }
+    }
     // MARK: - Selectors
     @objc func handleRefresh() {
         DispatchQueue.main.async {
+            self.viewModel.messages.removeAll()
             self.collectionView.reloadData()
         }
     }
@@ -129,18 +144,3 @@ extension ChatController: ViewModelDelegate {
         }
     }
 }
-//    // MARK: - ChatInputDelegate
-//extension ChatController: ChatInputDelegate {
-//    func inputView(_ view: CustomInputAccessoryView, input: String) {
-//        self.customInputView.sendAction = { [self] in
-//            self.viewModel.getResponse(input: input) { result in
-//                switch result {
-//                case .success(let success):
-//                    print(success)
-//                case .failure(let failure):
-//                    print(failure)
-//                }
-//            }
-//        }
-//    }
-//}

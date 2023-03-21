@@ -8,17 +8,18 @@
 import UIKit
 import OpenAISwift
 import CoreData
+import RevenueCat
 
 protocol ViewModelDelegate: AnyObject {
-    func responseSuccess()
+    func responseSuccess() /// For chat Screen success response after reload
 }
 
 protocol ViewModelProtocol {
-    var delegate: ViewModelDelegate? { get set }
-    func numberofRows() -> Int
-    func chatForRow(at indexPath: Int) -> Chat
-    func getResponse(input: String, completion: @escaping(Result<String, Error>) -> Void)
-    func saveChat(chate: Chat)
+    var delegate: ViewModelDelegate? { get set } ///ViewModel's delegate
+    func numberofRows() -> Int  /// For CollectionView
+    func chatForRow(at indexPath: Int) -> Chat /// For CollectionView
+    func getResponse(input: String, completion: @escaping(Result<String, Error>) -> Void) ///For API Sender and Response
+    func saveChat(chate: Chat) /// Core Data Save Func.
 }
 
 class ChatViewModel: ViewModelProtocol {
@@ -31,6 +32,33 @@ class ChatViewModel: ViewModelProtocol {
         didSet {
             self.delegate?.responseSuccess()
         }
+    } /// Chat model first message
+    // MARK: - Response
+    func getResponse(input: String, completion: @escaping(Result<String, Error>) -> Void) {
+        let sender = Chat(data: ["isSender": true, "date": Date().timeIntervalSince1970 as Double, "message": input])
+        self.saveChat(chate: sender)///sender core data save
+        self.messages.append(sender)///sender array append
+        client.sendCompletion(with: input, maxTokens: 500, temperature: 1, completionHandler: { result in
+            switch result {
+            case .success(let model):
+                print(String(describing: model.choices))
+                let output = model.choices.first?.text ?? ""
+                let newOutput = output.trimmingCharacters(in: .whitespacesAndNewlines) ///  arrange spaces
+                let chat = Chat(data: ["isSender": false, "date": Date().timeIntervalSince1970 as Double, "message": newOutput]) /// user's text
+                self.saveChat(chate: chat) ///  save coredata
+                self.messages.append(chat) ///  array append
+                completion(.success(output))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        })
+    }
+    // MARK: - For CollectionView
+    func numberofRows() -> Int {
+        return messages.count /// numberOfItemsInSection
+    }
+    func chatForRow(at indexPath: Int) -> Chat {
+        messages[indexPath] ///cell for item at
     }
     // MARK: - CoreData Save
     func saveChat(chate: Chat) {
@@ -79,31 +107,46 @@ class ChatViewModel: ViewModelProtocol {
             print(error.localizedDescription)
         }
     }
-    // MARK: - Response
-    func getResponse(input: String, completion: @escaping(Result<String, Error>) -> Void) {
-        let sender = Chat(data: ["isSender": true, "date": Date().timeIntervalSince1970 as Double, "message": input])
-        self.saveChat(chate: sender)
-        self.messages.append(sender)
-        client.sendCompletion(with: input, maxTokens: 500, temperature: 1, completionHandler: { result in
-            switch result {
-            case .success(let model):
-                print(String(describing: model.choices))
-                let output = model.choices.first?.text ?? ""
-                let newOutput = output.trimmingCharacters(in: .whitespacesAndNewlines)
-                let chat = Chat(data: ["isSender": false, "date": Date().timeIntervalSince1970 as Double, "message": newOutput])
-                self.saveChat(chate: chat)
-                self.messages.append(chat)
-                completion(.success(output))
-            case .failure(let error):
-                completion(.failure(error))
+    // MARK: - RevenueCat
+    func setupUI() {
+        Purchases.shared.getCustomerInfo { [weak self] info, error in /// control premium user
+            guard let info = info, error == nil else { return }
+            if info.entitlements.all["Premium"]?.isActive == true {
+                
+            } else {
+                
             }
-        })
+        }
     }
-    // MARK: - For CollectionView
-    func numberofRows() -> Int {
-        return messages.count
+    func fetchPackage(completion: @escaping (RevenueCat.Package) -> Void, selected: String) { /// in app fetch packages
+        Purchases.shared.getOfferings { offerings, error in
+            guard let offerings = offerings, error == nil else { return }
+            guard let package = offerings.all.first?.value.package(identifier: selected) else { return }
+            completion(package)
+        }
     }
-    func chatForRow(at indexPath: Int) -> Chat {
-        messages[indexPath]
+    func purchase(package: RevenueCat.Package) {  /// in app package purchase
+        Purchases.shared.purchase(package: package) { [weak self] transaction, info, error, userCancelled in
+            guard let transaction = transaction,
+                  let info = info,
+                  error == nil, !userCancelled else {
+                return
+            }
+            if info.entitlements.all["Premium"]?.isActive == true {
+                
+            } else {
+                
+            }
+        }
+    }
+    func restorePurchases() {
+        Purchases.shared.restorePurchases { [weak self] info, error in
+            guard let info = info, error == nil else { return }
+            if info.entitlements.all["Premium"]?.isActive == true {
+                
+            } else {
+                
+            }
+        }
     }
 }
